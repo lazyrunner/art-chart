@@ -92,10 +92,7 @@ export default function Home() {
           labels: Object.keys(result.data[0]),
           datasets: [
             {
-              // data: [
-              //   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              //   0, 0, 0, 0, 0, 0, 0, 0, 0,
-              // ],
+              data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
               borderColor: `hsl(0, 100%, 0%)`,
             },
           ],
@@ -113,7 +110,6 @@ export default function Home() {
       datasets: [
         ...data.datasets,
         {
-          label: "user" + count,
           data: Object.values(allRows[count]),
           borderColor: `hsl(${Math.random() * 360}, 70%, 50%)`,
         },
