@@ -1,4 +1,5 @@
 "use client";
+import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
@@ -9,7 +10,8 @@ import {
   Title,
   Tooltip,
   Legend,
-  scales,
+  ChartData,
+  ChartOptions,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import Papa from "papaparse";
@@ -25,7 +27,7 @@ ChartJS.register(
   Legend
 );
 
-export const options = {
+const options: ChartOptions<"line"> = {
   responsive: true,
   plugins: {
     legend: {
@@ -36,25 +38,13 @@ export const options = {
       text: "Personality classification",
     },
   },
-  // animation: {
-  //   duration: 1000, // Animation duration in milliseconds
-  //   easing: "easeInOutQuad", // Easing function for smoother transitions
-  //   // You can also target specific properties for animation:
-  //   tension: {
-  //     duration: 5000,
-  //     easing: "linear",
-  //     from: 0, // Starting tension
-  //     to: 0.4, // Ending tension
-  //     loop: true, // Loop the animation
-  //   },
-  // },
   scales: {
     y: {
       min: -2,
       max: 2,
       ticks: {
         stepSize: 1, // ensures it hits -2, -1, 0, 1, 2
-        callback: function (value) {
+        callback: function (value: string | number) {
           switch (value) {
             case -2:
               return "Less Likely";
@@ -71,14 +61,14 @@ export const options = {
   },
 };
 
-export const initialData = {
+const initialData: ChartData<"line"> = {
   labels: [],
   datasets: [],
 };
 
 export default function Home() {
   const [data, setData] = useState(initialData);
-  const [allRows, setAllRows] = useState([]);
+  const [allRows, setAllRows] = useState<any[]>([]);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
@@ -89,13 +79,10 @@ export default function Home() {
         setAllRows(result.data.slice(0, -1)); // slice(-1) removes empty row if present
         setData({
           ...data,
-          labels: Object.keys(result.data[0]),
+          labels: Object.keys(result.data[0] || ""),
           datasets: [
             {
-              // data: [
-              //   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-              //   0, 0, 0, 0, 0, 0, 0, 0, 0,
-              // ],
+              data: [],
               borderColor: `hsl(0, 100%, 0%)`,
             },
           ],
@@ -121,18 +108,6 @@ export default function Home() {
     });
   }, 3000);
 
-  const handleClick = () => {
-    const newDatasets = {
-      label: "Looping tension2",
-      data: [64, 40, 10, 11, 23, 45, 30],
-      fill: false,
-      borderColor: "rgb(7, 1, 192)",
-    };
-    setData((currData) => ({
-      ...currData,
-      datasets: [...currData.datasets, newDatasets],
-    }));
-  };
   return (
     <div className="grid">
       <div>
